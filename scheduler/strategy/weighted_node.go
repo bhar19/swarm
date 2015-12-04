@@ -1,6 +1,7 @@
 package strategy
 
 import (
+	"fmt"
 	"github.com/docker/swarm/cluster"
 	"github.com/docker/swarm/scheduler/node"
 )
@@ -42,6 +43,8 @@ func weighNodes(config *cluster.ContainerConfig, nodes []*node.Node) (weightedNo
 	for _, node := range nodes {
 		nodeMemory := node.TotalMemory
 		nodeCpus := node.TotalCpus
+
+		fmt.Println("Env", config.Env)
 
 		// Skip nodes that are smaller than the requested resources.
 		if nodeMemory < int64(config.Memory) || nodeCpus < config.CpuShares {
