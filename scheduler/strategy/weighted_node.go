@@ -2,6 +2,7 @@ package strategy
 
 import (
 	"fmt"
+	log "github.com/Sirupsen/logrus"
 	"github.com/docker/swarm/cluster"
 	"github.com/docker/swarm/scheduler/node"
 )
@@ -44,6 +45,8 @@ func weighNodes(config *cluster.ContainerConfig, nodes []*node.Node) (weightedNo
 		nodeMemory := node.TotalMemory
 		nodeCpus := node.TotalCpus
 
+		//debugging information for io schedule part
+		log.WithField("Env", config.Env).Debugf("Printing Environment values to console")
 		fmt.Println("Env", config.Env)
 
 		// Skip nodes that are smaller than the requested resources.

@@ -9,6 +9,13 @@ fi
 
 VERSION=$1
 
+#set environemnt GITHUBPATH as environemnt variable for user defined
+if [ $GITHUBPATH ]; then
+  GITHUB_PATH=$GITHUBPATH
+else
+  GITHUB_PATH="https://github.com/docker/swarm.git"
+fi
+
 # cd to the current directory so the script can be run from anywhere.
 cd `dirname $0`
 
@@ -21,7 +28,7 @@ echo "Fetching and building swarm $VERSION..."
 # Create a temporary directory.
 TEMP=`mktemp -d`
 
-git clone -b $VERSION https://github.com/docker/swarm.git $TEMP
+git clone -b $VERSION $GITHUB_PATH $TEMP
 docker build -t swarm-builder $TEMP
 
 # Create a dummy swarmbuild container so we can run a cp against it.
