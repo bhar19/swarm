@@ -1,7 +1,6 @@
 package strategy
 
 import (
-	"fmt"
 	log "github.com/Sirupsen/logrus"
 	"github.com/docker/swarm/cluster"
 	"github.com/docker/swarm/scheduler/node"
@@ -46,9 +45,15 @@ func weighNodes(config *cluster.ContainerConfig, nodes []*node.Node) (weightedNo
 		nodeCpus := node.TotalCpus
 
 		//debugging information for io schedule part
+<<<<<<< HEAD
+		log.WithFields(log.Fields{"Config memory": config.Memory, "config.share": config.CpuShares).Debugf("Printing Environment values to console")
+		log.WithFields(log.Fields{"nodeMemory": nodeMemory, "nodeCpus": nodeCpus).Debugf("Printing Environment values to console")
+		log.WithFields(log.Fields{"UsedMemory": node.UsedMemory, "UsedCpus": node.UsedCpus).Debugf("Printing Environment values to console")
+=======
 		log.WithFields("Env1:", config.Memory, config.CpuShares).Debugf("Printing Environment values to console")
 		log.WithFields("Env2:", nodeMemory, nodeCpus).Debugf("Printing Environment values to console")
 		log.WithFields("Env3:", node.UsedMemory, node.UsedCpus).Debugf("Printing Environment values to console")
+>>>>>>> 63a8ee75e96088b2b12b6ca982d1279e959208f1
 
 		// Skip nodes that are smaller than the requested resources.
 		if nodeMemory < int64(config.Memory) || nodeCpus < config.CpuShares {
