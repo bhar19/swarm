@@ -213,9 +213,9 @@ func (e *Engine) updateSpecs() error {
 	e.Cpus = info.NCPU
 	e.Memory = info.MemTotal
 	//debugging information for io schedule part
-	sysInfo = e.client.sysinfo.New(true)
-        log.WithFields(log.Fields{"BlkioWeight1 :": info.BlkioWeight}).Debugf("Printing Environment BlkioWeight values to console")
-	log.WithFields(log.Fields{"BlkioWeight2 :": sysInfo.BlkioWeight}).Debugf("Printing Environment BlkioWeight values to console")
+	//sysInfo = e.client.sysinfo.New(true)
+        //log.WithFields(log.Fields{"BlkioWeight1 :": info.BlkioWeight}).Debugf("Printing Environment BlkioWeight values to console")
+	log.WithFields(log.Fields{"ID :": info.ID, "Name :": info.Name, "cpu :": info.NCPU, "Memory :": info.MemTotal}).Debugf("Printing Environment BlkioWeight values to console")
 	e.Labels = map[string]string{
 		"storagedriver":   info.Driver,
 		"executiondriver": info.ExecutionDriver,
