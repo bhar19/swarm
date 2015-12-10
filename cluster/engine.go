@@ -212,10 +212,11 @@ func (e *Engine) updateSpecs() error {
 	e.Name = info.Name
 	e.Cpus = info.NCPU
 	e.Memory = info.MemTotal
+	hostConfig := &e.client.HostConfig{}
 	//debugging information for io schedule part
 	//sysInfo = e.client.StartContainer(e.ID, nil)
         //log.WithFields(log.Fields{"BlkioWeight1 :": info.BlkioWeight}).Debugf("Printing Environment BlkioWeight values to console")
-	log.WithFields(log.Fields{"ID :": info.ID, "Name :": info.Name, "cpu :": info.NCPU, "Memory :": info.MemTotal, "OperatingSystem:": info.OperatingSystem, "KernelVersion:": info.KernelVersion, "Containers:" : info.Containers}).Debugf("Printing Environment BlkioWeight values to console")
+	log.WithFields(log.Fields{"ID :": info.ID, "Name :": info.Name, "cpu :": info.NCPU, "Memory :": info.MemTotal, "OperatingSystem:": info.OperatingSystem, "KernelVersion:": info.KernelVersion, "Containers:" : info.Containers, "BlkioWeight:": hostConfig.BlkioWeight, "hostConfig": hostConfig}).Debugf("Printing Environment BlkioWeight values to console")
 	e.Labels = map[string]string{
 		"storagedriver":   info.Driver,
 		"executiondriver": info.ExecutionDriver,
