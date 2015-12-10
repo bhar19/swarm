@@ -212,8 +212,8 @@ func (e *Engine) updateSpecs() error {
 	e.Name = info.Name
 	e.Cpus = info.NCPU
 	e.Memory = info.MemTotal
-	hostConfig := &dockerclient.HostConfig{}
-	//hostConfig,err := e.client.HostConfig()
+	//hostConfig := &dockerclient.HostConfig{}
+	hostConfig,err := e.client.HostConfig()
 	//if err != nil {
 	//	return err
 	//}
