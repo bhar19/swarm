@@ -143,6 +143,11 @@ func (client *DockerClient) Info() (*Info, error) {
 	return ret, nil
 }
 
+func (client *DockerClient) HostConfig() (*HostConfig, error) {
+        ret := &HostConfig{}
+        return ret, nil
+}
+
 func (client *DockerClient) ListContainers(all bool, size bool, filters string) ([]Container, error) {
 	argAll := 0
 	if all == true {

@@ -10,6 +10,7 @@ type StatCallback func(string, *Stats, chan error, ...interface{})
 
 type Client interface {
 	Info() (*Info, error)
+	HostConfig() (*HostConfig, error)
 	ListContainers(all, size bool, filters string) ([]Container, error)
 	InspectContainer(id string) (*ContainerInfo, error)
 	InspectImage(id string) (*ImageInfo, error)
