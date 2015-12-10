@@ -20,6 +20,11 @@ func (client *MockClient) Info() (*dockerclient.Info, error) {
 	return args.Get(0).(*dockerclient.Info), args.Error(1)
 }
 
+func (client *MockClient) HostConfig() (*dockerclient.HostConfig, error) {
+        args := client.Mock.Called()
+        return args.Get(0).(*dockerclient.HostConfig), args.Error(1)
+}
+
 func (client *MockClient) ListContainers(all bool, size bool, filters string) ([]dockerclient.Container, error) {
 	args := client.Mock.Called(all, size, filters)
 	return args.Get(0).([]dockerclient.Container), args.Error(1)

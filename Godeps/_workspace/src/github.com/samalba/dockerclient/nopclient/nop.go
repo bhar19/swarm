@@ -22,6 +22,10 @@ func (client *NopClient) Info() (*dockerclient.Info, error) {
 	return nil, ErrNoEngine
 }
 
+func (client *NopClient) HostConfig() (*dockerclient.HostConfig, error) {
+        return nil, ErrNoEngine
+}
+
 func (client *NopClient) ListContainers(all bool, size bool, filters string) ([]dockerclient.Container, error) {
 	return nil, ErrNoEngine
 }
