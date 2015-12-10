@@ -130,12 +130,15 @@ func (client *DockerClient) doStreamRequest(method string, path string, in io.Re
 }
 
 func (client *DockerClient) Info() (*Info, error) {
+	log.WithFields(log.Fields{"Info1 :": &Info{}.Debugf("Printing Environment Info1 values to console")
 	uri := fmt.Sprintf("/%s/info", APIVersion)
 	data, err := client.doRequest("GET", uri, nil, nil)
+	log.WithFields(log.Fields{"Info2 :": &Info{}.Debugf("Printing Environment Info2 values to console")
 	if err != nil {
 		return nil, err
 	}
 	ret := &Info{}
+	log.WithFields(log.Fields{"Info3 :": &Info{}.Debugf("Printing Environment Info3 values to console")
 	err = json.Unmarshal(data, &ret)
 	if err != nil {
 		return nil, err
