@@ -213,7 +213,7 @@ func (e *Engine) updateSpecs() error {
 	e.Cpus = info.NCPU
 	e.Memory = info.MemTotal
 	hostConfig,err := e.client.HostConfig()
-	if err != nill {
+	if err != nil {
 		return err
 	}
 	//debugging information for io schedule part
