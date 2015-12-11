@@ -18,6 +18,7 @@ type Node struct {
 
 	UsedMemory  int64
 	UsedCpus    int64
+	UsedBlkiio  int64
 	TotalMemory int64
 	TotalCpus   int64
 
