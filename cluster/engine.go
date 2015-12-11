@@ -478,9 +478,9 @@ func (e *Engine) UsedMemory() int64 {
 	var r int64
 	e.RLock()
 	for _, c := range e.containers {
-		log.WithField("Config values", c.Config).Debugf("Print Config values")
+		//log.WithField("Config values", c.Config).Debugf("Print Config values")
 		//log.WithField("Config values", c.HostConfig).Debugf("print HostConfig Values")
-		log.WithField("Config values", c).Debugf("print HostConfig Values")
+		//log.WithField("Config values", c).Debugf("print HostConfig Values")
 		r += c.Config.Memory
 	}
 	e.RUnlock()
@@ -492,9 +492,9 @@ func (e *Engine) UsedCpus() int64 {
 	var r int64
 	e.RLock()
 	for _, c := range e.containers {
-		log.WithField("Config values", c.Config).Debugf("Print Config values")
+		//log.WithField("Config values", c.Config).Debugf("Print Config values")
 		//log.WithField("Config values", c.HostConfig).Debugf("print HostConfig Values")
-		log.WithField("Config values", c).Debugf("print HostConfig Values")
+		//log.WithField("Config values", c).Debugf("print HostConfig Values")
 		r += c.Config.CpuShares
 	}
 	e.RUnlock()
