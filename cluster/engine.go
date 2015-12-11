@@ -468,9 +468,7 @@ func (e *Engine) UsedMemory() int64 {
 	var r int64
 	e.RLock()
 	for _, c := range e.containers {
-		//log.WithField("Config values", c.Config).Debugf("Print Config values")
-		//log.WithField("Config values", c.HostConfig).Debugf("print HostConfig Values")
-		//log.WithField("Config values", c).Debugf("print HostConfig Values")
+		log.WithField("Config values for Memory in UsedMemory function", c.Config.Memory).Debugf("print Config Values for Memory")
 		r += c.Config.Memory
 	}
 	e.RUnlock()
@@ -482,10 +480,7 @@ func (e *Engine) UsedCpus() int64 {
 	var r int64
 	e.RLock()
 	for _, c := range e.containers {
-		//log.WithField("Config values", c.Config).Debugf("Print Config values")
-		log.WithField("Config values", c.Config.HostConfig.BlkioWeight).Debugf("Print Config values for BlkioWeight")
-		//log.WithField("Config values", c.HostConfig).Debugf("print HostConfig Values")
-		//log.WithField("Config values", c).Debugf("print HostConfig Values")
+		log.WithField("Config values for Cpu shares in UsedCPus function", c.Config.CpuShares).Debugf("Print Config values for Cpushares")
 		r += c.Config.CpuShares
 	}
 	e.RUnlock()
@@ -497,9 +492,8 @@ func (e *Engine) UsedBlkio() int64 {
 	var r int64
 	e.RLock()
 	for _,c := range e.containers {
-		r += c.Config.CpuShares
-		//r += c.Config.BlkioWeight
-		//log.WithField("Config values", c.Config).Debugf("Print Config values")
+		r += c.Config.HostConfig.BlkioWeight
+		log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.HostConfig.BlkioWeight).Debugf("Print Config values for Blkio")
 	}
 	e.RUnlock()
 	return r
