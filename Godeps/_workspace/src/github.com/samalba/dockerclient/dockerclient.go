@@ -14,7 +14,6 @@ import (
 	"strings"
 	"sync/atomic"
 	"time"
-	log "github.com/Sirupsen/logrus"
 )
 
 const (
