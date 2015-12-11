@@ -214,14 +214,15 @@ func (e *Engine) updateSpecs() error {
 	e.Memory = info.MemTotal
 	//hostConfig := &dockerclient.HostConfig{}
 	//hostConfig,err := e.client.HostConfig()
-	hostConfig,err := e.client.InspectContainer(e.ID)
-	if err != nil {
-		return err
-	}
+	//hostConfig,err := e.client.InspectContainer(e.ID)
+	//if err != nil {
+	//	return err
+	//}
 	//debugging information for io schedule part
 	//sysInfo = e.client.StartContainer(e.ID, nil)
         //log.WithFields(log.Fields{"BlkioWeight1 :": info.BlkioWeight}).Debugf("Printing Environment BlkioWeight values to console")
-	log.WithFields(log.Fields{"ID :": info.ID, "Name :": info.Name, "cpu :": info.NCPU, "Memory :": info.MemTotal, "OperatingSystem:": info.OperatingSystem, "KernelVersion:": info.KernelVersion, "Containers:" : info.Containers, "BlkioWeight:": hostConfig.HostConfig}).Debugf("Printing Environment BlkioWeight values to console")
+	//log.WithFields(log.Fields{"ID :": info.ID, "Name :": info.Name, "cpu :": info.NCPU, "Memory :": info.MemTotal, "OperatingSystem:": info.OperatingSystem, "KernelVersion:": info.KernelVersion, "Containers:" : info.Containers, "BlkioWeight:": hostConfig.HostConfig}).Debugf("Printing Environment BlkioWeight values to console")
+	log.WithFields(log.Fields{"ID :": info.ID, "Name :": info.Name, "cpu :": info.NCPU, "Memory :": info.MemTotal}).Debugf("Printing Environment BlkioWeight values to console")
 	e.Labels = map[string]string{
 		"storagedriver":   info.Driver,
 		"executiondriver": info.ExecutionDriver,
@@ -491,6 +492,17 @@ func (e *Engine) UsedCpus() int64 {
 		r += c.Config.CpuShares
 	}
 	e.RUnlock()
+	return r
+}
+
+// UsedBlkio returns the sum of blkio weights reservers by containers.
+func (e *Engine) UsedBlkio() int64 {
+	var r int64
+	e.RLock()
+	for _,c := range e.containers {
+		r += c.config.BlkioWeight
+	}
+	e.Runlock()
 	return r
 }
 
