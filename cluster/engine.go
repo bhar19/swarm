@@ -212,16 +212,6 @@ func (e *Engine) updateSpecs() error {
 	e.Name = info.Name
 	e.Cpus = info.NCPU
 	e.Memory = info.MemTotal
-	//hostConfig := &dockerclient.HostConfig{}
-	//hostConfig,err := e.client.HostConfig()
-	//hostConfig,err := e.client.InspectContainer(e.ID)
-	//if err != nil {
-	//	return err
-	//}
-	//debugging information for io schedule part
-	//sysInfo = e.client.StartContainer(e.ID, nil)
-        //log.WithFields(log.Fields{"BlkioWeight1 :": info.BlkioWeight}).Debugf("Printing Environment BlkioWeight values to console")
-	//log.WithFields(log.Fields{"ID :": info.ID, "Name :": info.Name, "cpu :": info.NCPU, "Memory :": info.MemTotal, "OperatingSystem:": info.OperatingSystem, "KernelVersion:": info.KernelVersion, "Containers:" : info.Containers, "BlkioWeight:": hostConfig.HostConfig}).Debugf("Printing Environment BlkioWeight values to console")
 	log.WithFields(log.Fields{"ID :": info.ID, "Name :": info.Name, "cpu :": info.NCPU, "Memory :": info.MemTotal}).Debugf("Printing Environment BlkioWeight values to console")
 	e.Labels = map[string]string{
 		"storagedriver":   info.Driver,
@@ -493,6 +483,7 @@ func (e *Engine) UsedCpus() int64 {
 	e.RLock()
 	for _, c := range e.containers {
 		//log.WithField("Config values", c.Config).Debugf("Print Config values")
+		log.WithField("Config values", c.Config.HostConfig.BlkioWeight).Debugf("Print Config values for BlkioWeight")
 		//log.WithField("Config values", c.HostConfig).Debugf("print HostConfig Values")
 		//log.WithField("Config values", c).Debugf("print HostConfig Values")
 		r += c.Config.CpuShares

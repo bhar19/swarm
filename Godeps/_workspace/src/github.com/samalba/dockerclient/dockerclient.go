@@ -131,41 +131,17 @@ func (client *DockerClient) doStreamRequest(method string, path string, in io.Re
 }
 
 func (client *DockerClient) Info() (*Info, error) {
-	log.WithFields(log.Fields{"Info1 :": &Info{}}).Debugf("Printing Environment Info1 values to console")
 	uri := fmt.Sprintf("/%s/info", APIVersion)
 	data, err := client.doRequest("GET", uri, nil, nil)
-	log.WithFields(log.Fields{"Info2 :": &Info{}}).Debugf("Printing Environment Info2 values to console")
 	if err != nil {
 		return nil, err
 	}
 	ret := &Info{}
-	log.WithFields(log.Fields{"Info3 :": &Info{}}).Debugf("Printing Environment Info3 values to console")
-	log.WithFields(log.Fields{"Info3 :": ret}).Debugf("Printing Environment Info3 values to console")
 	err = json.Unmarshal(data, &ret)
-	log.WithFields(log.Fields{"Info4 :": &Info{}}).Debugf("Printing Environment Info4 values to console")
-	log.WithFields(log.Fields{"Info4 :": ret}).Debugf("Printing Environment Info4 values to console")
 	if err != nil {
 		return nil, err
 	}
-	log.WithFields(log.Fields{"Info5 :": ret}).Debugf("Printing Environment Info5 values to console")
-	log.WithFields(log.Fields{"Info5 :": &Info{}}).Debugf("Printing Environment Info5 values to console")
 	return ret, nil
-}
-
-func (client *DockerClient) HostConfig() (*HostConfig, error) {
-	uri := fmt.Sprintf("/%s/HostConfig", APIVersion)
-	data, err := client.doRequest("GET", uri, nil, nil)
-	if err != nil {
-                return nil, err
-        }
-        ret := &HostConfig{}
-	log.WithFields(log.Fields{"HostConfig1 :": ret}).Debugf("Printing Environment HostConfig1 values to console")
-	err = json.Unmarshal(data, &ret)
-	if err != nil {
-                return nil, err
-        }
-	log.WithFields(log.Fields{"HostConfig2 :": ret}).Debugf("Printing Environment HostConfig2 values to console")
-        return ret, nil
 }
 
 func (client *DockerClient) ListContainers(all bool, size bool, filters string) ([]Container, error) {
