@@ -500,9 +500,9 @@ func (e *Engine) UsedBlkio() int64 {
 	var r int64
 	e.RLock()
 	for _,c := range e.containers {
-		r += c.config.BlkioWeight
+		r += c.Config.BlkioWeight
 	}
-	e.Runlock()
+	e.RUnlock()
 	return r
 }
 
