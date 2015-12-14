@@ -3,6 +3,7 @@ package node
 import (
 	"errors"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/docker/swarm/cluster"
 )
 
@@ -61,6 +62,8 @@ func (n *Node) AddContainer(container *cluster.Container) error {
 		n.UsedMemory = n.UsedMemory + memory
 		n.UsedCpus = n.UsedCpus + cpus
 		n.UsedBlkio = n.UsedBlkio + blkio
+		log.WithFields(log.Fields{"Config memory": container.Config.Memory, "Config CpuShare ": container.Config.CpuShares, "Config blkio ": container.Config.HostConfig.BlkioWeight}).Debugf("Printing Environment values to console in Node")
+		log.WithFields(log.Fields{"Used Memory ": n.UsedMemory, "Used CPus ": n.UsedCpus, "Used blkio ": n.UsedBlkio}).Debugf("Printing Environment values to console in Node")
 	}
 	n.Containers = append(n.Containers, container)
 	return nil
