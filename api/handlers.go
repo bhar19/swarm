@@ -963,7 +963,6 @@ func postBuild(c *context, w http.ResponseWriter, r *http.Request) {
 		Remove:         boolValue(r, "rm"),
 		ForceRemove:    boolValue(r, "forcerm"),
 		SuppressOutput: boolValue(r, "q"),
-		BlkioWeight:    int64ValueOrZero(r, "blkioweight"),
 		Memory:         int64ValueOrZero(r, "memory"),
 		MemorySwap:     int64ValueOrZero(r, "memswap"),
 		CpuShares:      int64ValueOrZero(r, "cpushares"),
