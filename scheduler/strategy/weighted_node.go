@@ -59,8 +59,10 @@ func weighNodes(config *cluster.ContainerConfig, nodes []*node.Node) (weightedNo
 		}
 
 		var (
-			cpuScore    int64 = 100
-			memoryScore int64 = 100
+			cpuScore	int64 = 100
+			memoryScore	int64 = 100
+			blkioScore	int64 = 100
+			nodeblkio	int64 = 1000
 		)
 
 		if config.CpuShares > 0 {
@@ -70,8 +72,12 @@ func weighNodes(config *cluster.ContainerConfig, nodes []*node.Node) (weightedNo
 			memoryScore = (node.UsedMemory + config.Memory) * 100 / nodeMemory
 		}
 
+		if config.HostConfig.BlkioWeight > 0 {
+			blkioScore = (config.HostConfig.BlkioWeight) * 100 / nodeblkio
+		}
+
 		if cpuScore <= 100 && memoryScore <= 100 {
-			weightedNodes = append(weightedNodes, &weightedNode{Node: node, Weight: cpuScore + memoryScore})
+			weightedNodes = append(weightedNodes, &weightedNode{Node: node, Weight: cpuScore + memoryScore + blkioScore})
 		}
 	}
 
