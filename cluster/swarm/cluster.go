@@ -778,9 +778,10 @@ func (c *Cluster) BuildImage(buildImage *dockerclient.BuildImage, out io.Writer)
 
 	// get an engine
 	config := cluster.BuildContainerConfig(dockerclient.ContainerConfig{
-		CpuShares: buildImage.CpuShares,
-		Memory:    buildImage.Memory,
-		Env:       convertMapToKVStrings(buildImage.BuildArgs),
+		CpuShares:   buildImage.CpuShares,
+		Memory:      buildImage.Memory,
+		BlkioWeight: buildImage.BlkioWeight,
+		Env:         convertMapToKVStrings(buildImage.BuildArgs),
 	})
 	buildImage.BuildArgs = convertKVStringsToMap(config.Env)
 	nodes, err := c.scheduler.SelectNodesForContainer(c.listNodes(), config)

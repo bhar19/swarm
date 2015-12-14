@@ -35,11 +35,12 @@ type ContainerConfig struct {
 	VolumeDriver string
 
 	// FIXME: The following fields have been removed since API v1.18
-	Memory     int64
-	MemorySwap int64
-	CpuShares  int64
-	Cpuset     string
-	PortSpecs  []string
+	BlkioWeight int64
+	Memory      int64
+	MemorySwap  int64
+	CpuShares   int64
+	Cpuset      string
+	PortSpecs   []string
 
 	// This is used only by the create command
 	HostConfig HostConfig
@@ -445,6 +446,7 @@ type BuildImage struct {
 	Remove         bool
 	ForceRemove    bool
 	Pull           bool
+	BlkioWeight    int64
 	Memory         int64
 	MemorySwap     int64
 	CpuShares      int64

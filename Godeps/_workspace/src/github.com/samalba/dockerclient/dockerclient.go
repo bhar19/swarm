@@ -764,6 +764,7 @@ func (client *DockerClient) BuildImage(image *BuildImage) (io.ReadCloser, error)
 		v.Set("q", "1")
 	}
 
+	v.Set("blkioweight", strconv.FormatInt(image.BlkioWeight, 10))
 	v.Set("memory", strconv.FormatInt(image.Memory, 10))
 	v.Set("memswap", strconv.FormatInt(image.MemorySwap, 10))
 	v.Set("cpushares", strconv.FormatInt(image.CpuShares, 10))
