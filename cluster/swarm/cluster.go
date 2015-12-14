@@ -677,6 +677,8 @@ func (c *Cluster) listNodes() []*node.Node {
 	c.RLock()
 	defer c.RUnlock()
 
+	log.WithFields(log.Fields{"Config Engine: ": c.engines}).Debugf("Printing Environment values to console for Engine")
+
 	out := make([]*node.Node, 0, len(c.engines))
 	for _, e := range c.engines {
 		node := node.NewNode(e)
