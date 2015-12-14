@@ -38,18 +38,20 @@ func (n weightedNodeList) Less(i, j int) bool {
 }
 
 func weighNodes(config *cluster.ContainerConfig, nodes []*node.Node) (weightedNodeList, error) {
+	var UsedBlkio int64
 	weightedNodes := weightedNodeList{}
 
 	for _, node := range nodes {
 		nodeMemory := node.TotalMemory
 		nodeCpus := node.TotalCpus
+		UsedBlkio += config.HostConfig.BlkioWeight
 
 		//debugging information for io schedule part
                 log.WithFields(log.Fields{"Config memory": config.Memory, "config.share": config.CpuShares}).Debugf("Printing Environment values to console")
                 log.WithFields(log.Fields{"nodeMemory": nodeMemory, "nodeCpus": nodeCpus}).Debugf("Printing Environment values to console")
                 log.WithFields(log.Fields{"UsedMemory": node.UsedMemory, "UsedCpus": node.UsedCpus}).Debugf("Printing Environment values to console")
                 //log.WithFields(log.Fields{"UsedBlkio": node.UsedBlkio}).Debugf("Printing Environment values to console for blkio used")
-                log.WithFields(log.Fields{"Config Blkio": config.HostConfig.BlkioWeight, "UsedBlkio": node.UsedBlkio}).Debugf("Printing Environment values to console for blkio used")
+                log.WithFields(log.Fields{"Config Blkio": config.HostConfig.BlkioWeight, "UsedBlkio": UsedBlkio}).Debugf("Printing Environment values to console for blkio used")
                 //log.WithFields(log.Fields{"UsedBlkio2": config.BlkioWeight}).Debugf("Printing Environment values to console for blkio used")
 
 		// Skip nodes that are smaller than the requested resources.
