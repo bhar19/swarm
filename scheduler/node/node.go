@@ -65,6 +65,10 @@ func (n *Node) AddContainer(container *cluster.Container) error {
 		log.WithFields(log.Fields{"Config memory": container.Config.Memory, "Config CpuShare ": container.Config.CpuShares, "Config blkio ": container.Config.HostConfig.BlkioWeight}).Debugf("Printing Environment values to console in Node")
 		log.WithFields(log.Fields{"Used Memory ": n.UsedMemory, "Used CPus ": n.UsedCpus, "Used blkio ": n.UsedBlkio}).Debugf("Printing Environment values to console in Node")
 	}
+	log.WithFields(log.Fields{"Config memory": container.Config.Memory, "Config CpuShare ": container.Config.CpuShares, "Config blkio ": container.Config.Host
+Config.BlkioWeight}).Debugf("Printing Environment values to console in Node")
+	log.WithFields(log.Fields{"Used Memory ": n.UsedMemory, "Used CPus ": n.UsedCpus, "Used blkio ": n.UsedBlkio}).Debugf("Printing Environment values to cons
+ole in Node")
 	n.Containers = append(n.Containers, container)
 	return nil
 }
