@@ -27,6 +27,23 @@ func parseEnv(e string) (bool, string, string) {
 // FIXME: Temporary fix to handle forward/backward compatibility between Docker <1.6 and >=1.7
 // ContainerConfig should be handling converting to/from different docker versions
 func consolidateResourceFields(c *dockerclient.ContainerConfig) {
+
+	if c.BlkioWeight != c.HostConfig.BlkioWeight {
+                if c.BlkioWeight != 0 {
+                        c.HostConfig.BlkioWeight = c.BlkioWeight
+                } else {
+                        c.BlkioWeight = c.HostConfig.BlkioWeight
+                }
+        }
+
+	if c.Memory != c.HostConfig.Memory {
+                if c.Memory != 0 {
+                        c.HostConfig.Memory = c.Memory
+                } else {
+                        c.Memory = c.HostConfig.Memory
+                }
+        }
+
 	if c.Memory != c.HostConfig.Memory {
 		if c.Memory != 0 {
 			c.HostConfig.Memory = c.Memory
