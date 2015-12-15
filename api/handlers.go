@@ -14,6 +14,7 @@ import (
 	"strings"
 	"time"
 
+	log "github.com/Sirupsen/logrus"
 	dockerfilters "github.com/docker/docker/pkg/parsers/filters"
 	"github.com/docker/swarm/cluster"
 	"github.com/docker/swarm/version"
@@ -419,7 +420,9 @@ func postContainersCreate(c *context, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.WithFields(log.Fields{"name": "Print before NodesForContainer"}).Debugf("Print After Spread 423")
 	container, err := c.cluster.CreateContainer(cluster.BuildContainerConfig(config), name)
+	log.WithFields(log.Fields{"name": "Print after NodesForContainer"}).Debugf("Print after Spread 425")
 	if err != nil {
 		if strings.HasPrefix(err.Error(), "Conflict") {
 			httpError(w, err.Error(), http.StatusConflict)
