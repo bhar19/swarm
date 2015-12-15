@@ -787,7 +787,9 @@ func (c *Cluster) BuildImage(buildImage *dockerclient.BuildImage, out io.Writer)
 		Env:         convertMapToKVStrings(buildImage.BuildArgs),
 	})
 	buildImage.BuildArgs = convertKVStringsToMap(config.Env)
+	log.WithFields(log.Fields{"name": "Print before NodesForContainer"}).Debug("Print before Spread")
 	nodes, err := c.scheduler.SelectNodesForContainer(c.listNodes(), config)
+	log.WithFields(log.Fields{"name": "Print after NodesForContainer"}).Debug("Print before Spread")
 	c.scheduler.Unlock()
 	if err != nil {
 		return err
