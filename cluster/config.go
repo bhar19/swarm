@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"strings"
 
+	log "github.com/Sirupsen/logrus"
 	"github.com/samalba/dockerclient"
 )
 
@@ -30,25 +31,26 @@ func consolidateResourceFields(c *dockerclient.ContainerConfig) {
 
 	if c.BlkioWeight != c.HostConfig.BlkioWeight {
                 if c.BlkioWeight != 0 {
+			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used")
                         c.HostConfig.BlkioWeight = c.BlkioWeight
+			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used")
                 } else {
+			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used")
                         c.BlkioWeight = c.HostConfig.BlkioWeight
+			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used")
                 }
         }
 
-	if c.Memory != c.HostConfig.Memory {
-                if c.Memory != 0 {
-                        c.HostConfig.Memory = c.Memory
-                } else {
-                        c.Memory = c.HostConfig.Memory
-                }
-        }
 
 	if c.Memory != c.HostConfig.Memory {
 		if c.Memory != 0 {
+			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster")
 			c.HostConfig.Memory = c.Memory
+			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster")
 		} else {
+			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster")
 			c.Memory = c.HostConfig.Memory
+			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster")
 		}
 	}
 
@@ -62,6 +64,7 @@ func consolidateResourceFields(c *dockerclient.ContainerConfig) {
 
 	if c.CpuShares != c.HostConfig.CpuShares {
 		if c.CpuShares != 0 {
+			//log.WithFields(log.Fields{"ConfigCpuShares":c.HostConfig.CpuShares, "UsedCpuShares": c.CpuShares}).Debugf("Printing Environment values to console for Cpushares used in cluster")
 			c.HostConfig.CpuShares = c.CpuShares
 		} else {
 			c.CpuShares = c.HostConfig.CpuShares
