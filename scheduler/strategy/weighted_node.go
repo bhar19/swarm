@@ -72,7 +72,7 @@ func weighNodes(config *cluster.ContainerConfig, nodes []*node.Node) (weightedNo
 		}
 
 		if config.HostConfig.BlkioWeight > 0 {
-			blkioScore = (config.HostConfig.BlkioWeight + node.UsedBlkio) * 100 / nodeblkio
+			blkioScore = (node.UsedBlkio + config.BlkioWeight) * 100 / nodeblkio
 			log.WithFields(log.Fields{"blkioScore": blkioScore}).Debugf("Printing blkio score")
 		}
 

@@ -782,8 +782,8 @@ func (c *Cluster) BuildImage(buildImage *dockerclient.BuildImage, out io.Writer)
 	config := cluster.BuildContainerConfig(dockerclient.ContainerConfig{
 		CpuShares:   buildImage.CpuShares,
 		Memory:      buildImage.Memory,
-		//BlkioWeight: buildImage.BlkioWeight,
-		BlkioWeight: 300,
+		BlkioWeight: buildImage.BlkioWeight,
+		//BlkioWeight: 300,
 		Env:         convertMapToKVStrings(buildImage.BuildArgs),
 	})
 	buildImage.BuildArgs = convertKVStringsToMap(config.Env)
