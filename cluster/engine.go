@@ -481,6 +481,7 @@ func (e *Engine) UsedCpus() int64 {
 	e.RLock()
 	for _, c := range e.containers {
 		log.WithField("Config values for Cpu shares in UsedCPus function", c.Config.CpuShares).Debugf("Print Config values for Cpushares")
+		log.WithField("Config values for Cpu shares in UsedCpus function", c.Config).Debugf("Print Config values for Cpushares")
 		r += c.Config.CpuShares
 	}
 	e.RUnlock()
@@ -493,6 +494,7 @@ func (e *Engine) UsedBlkio() int64 {
 	e.RLock()
 	for _,c := range e.containers {
 		r += c.Config.BlkioWeight
+		log.WithField("Config values for c.Config in UsedBlkio function", c.Config).Debugf("Print Config values for HostConfig.Blkio")
 		//r += dockerclient.ContainerConfig.Config.HostConfig.BlkioWeight
 		log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.HostConfig.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
 		log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.BlkioWeight).Debugf("Print Config values for Config.Blkio")
