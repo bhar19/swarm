@@ -371,7 +371,9 @@ func (c *Cluster) CreateNetwork(request *dockerclient.NetworkCreate) (response *
 		config = cluster.BuildContainerConfig(dockerclient.ContainerConfig{Env: []string{"constraint:node==" + parts[0]}})
 	}
 
+	log.WithFields(log.Fields{"name": "Print before NodesForContainer at 374"}).Debugf("Print before Spread")
 	nodes, err := c.scheduler.SelectNodesForContainer(c.listNodes(), config)
+	log.WithFields(log.Fields{"name": "Print before NodesForContainer at 376"}).Debugf("Print before Spread")
 	if err != nil {
 		return nil, err
 	}
@@ -787,9 +789,9 @@ func (c *Cluster) BuildImage(buildImage *dockerclient.BuildImage, out io.Writer)
 		Env:         convertMapToKVStrings(buildImage.BuildArgs),
 	})
 	buildImage.BuildArgs = convertKVStringsToMap(config.Env)
-	log.WithFields(log.Fields{"name": "Print before NodesForContainer"}).Debug("Print before Spread")
+	log.WithFields(log.Fields{"name": "Print before NodesForContainer at 790"}).Debugf("Print before Spread")
 	nodes, err := c.scheduler.SelectNodesForContainer(c.listNodes(), config)
-	log.WithFields(log.Fields{"name": "Print after NodesForContainer"}).Debug("Print before Spread")
+	log.WithFields(log.Fields{"name": "Print after NodesForContainer at 792"}).Debugf("Print before Spread")
 	c.scheduler.Unlock()
 	if err != nil {
 		return err
