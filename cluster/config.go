@@ -30,7 +30,7 @@ func parseEnv(e string) (bool, string, string) {
 func consolidateResourceFields(c *dockerclient.ContainerConfig) {
 
 	if c.BlkioWeight != c.HostConfig.BlkioWeight {
-                if c.BlkioWeight != 0 {
+                if c.BlkioWeight = 0 {
 			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used for case 1")
                         c.HostConfig.BlkioWeight = c.BlkioWeight
 			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used for case 2")
@@ -44,13 +44,13 @@ func consolidateResourceFields(c *dockerclient.ContainerConfig) {
 
 	if c.Memory != c.HostConfig.Memory {
 		if c.Memory != 0 {
-			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster")
+			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster for case 1")
 			c.HostConfig.Memory = c.Memory
-			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster")
+			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster for case 2")
 		} else {
-			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster")
+			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in clusteri for case 3")
 			c.Memory = c.HostConfig.Memory
-			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster")
+			log.WithFields(log.Fields{"ConfigMemory": c.HostConfig.Memory, "Used Memory": c.Memory}).Debugf("Printing Environment values to console for Memory used in cluster for case 4")
 		}
 	}
 
