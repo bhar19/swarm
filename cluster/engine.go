@@ -390,7 +390,7 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		container.Config = BuildContainerConfig(*info.Config)
 		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
 
-		log.WithFields(log.Fields{"Config.BlkioWeight": *info.Config.BlkioWeight, "config.HostConfig.BlkioWeight": *info.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
+		log.WithFields(log.Fields{"Config.BlkioWeight": info.Config.BlkioWeight, "config.HostConfig.BlkioWeight": info.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
 		log.WithFields(log.Fields{"Config.BlkioWeight": container.Config.BlkioWeight, "config.HostConfig.BlkioWeight": container.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
 
 		// FIXME remove "duplicate" lines and move this to cluster/config.go
