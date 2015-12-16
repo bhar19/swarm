@@ -312,7 +312,9 @@ func (e *Engine) RefreshContainers(full bool) error {
 
 	merged := make(map[string]*Container)
 	for _, c := range containers {
+		log.WithFields(log.Fields{"Containers": containers}).Debugf("Print output for containers before updateContainer")
 		mergedUpdate, err := e.updateContainer(c, merged, full)
+		log.WithFields(log.Fields{"Containers": containers}).Debugf("Print output for containers after updateContainer")
 		if err != nil {
 			log.WithFields(log.Fields{"name": e.Name, "id": e.ID}).Errorf("Unable to update state of container %q: %v", c.Id, err)
 		} else {
@@ -383,6 +385,7 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		}
 		// Convert the ContainerConfig from inspect into our own
 		// cluster.ContainerConfig.
+		log.WithFields(log.Fields{"Info config hostconfig": info.Config.HostConfig.BlkioWeight, "Config blkio weight": info.Config.BlkioWeight}).Debugf("Print weights for blkioweight before BuildContainerConfig method")
 		log.WithFields(log.Fields{"name": "Print before BuildContainerConfig"}).Debugf("Print After engine 386")
 		container.Config = BuildContainerConfig(*info.Config)
 		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
