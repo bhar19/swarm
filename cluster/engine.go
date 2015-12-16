@@ -384,12 +384,17 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		if err != nil {
 			return nil, err
 		}
+
+		var (
+			d dockerclient.ContainerConfig
+		)
 		// Convert the ContainerConfig from inspect into our own
 		// cluster.ContainerConfig.
 		log.WithFields(log.Fields{"name": "Print before BuildContainerConfig"}).Debugf("Print After engine 386")
 		container.Config = BuildContainerConfig(*info.Config)
 		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
 
+		log.WithFields(log.Fields{"Config.BlkioWeight": d.BlkioWeight, "config.HostConfig.BlkioWeight": d.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
 		log.WithFields(log.Fields{"Config.BlkioWeight": info.Config.BlkioWeight, "config.HostConfig.BlkioWeight": info.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
 		log.WithFields(log.Fields{"Config.BlkioWeight": container.Config.BlkioWeight, "config.HostConfig.BlkioWeight": container.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
 
