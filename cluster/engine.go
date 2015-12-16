@@ -383,7 +383,10 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		}
 		// Convert the ContainerConfig from inspect into our own
 		// cluster.ContainerConfig.
+		log.WithFields(log.Fields{"name": "Print before BuildContainerConfig"}).Debugf("Print After engine 386")
+		log.WithFields(log.Fields{"Info config": *info.Config}).Debugf("Print info values")
 		container.Config = BuildContainerConfig(*info.Config)
+		log.WithFields(log.Fields{"name": "Print before BuildContainerConfig"}).Debugf("Print After engine 388")
 
 		// FIXME remove "duplicate" lines and move this to cluster/config.go
 		container.Config.CpuShares = container.Config.CpuShares * e.Cpus / 1024.0
