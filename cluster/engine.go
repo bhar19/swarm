@@ -508,8 +508,8 @@ func (e *Engine) UsedBlkio() int64 {
 	)
 	e.RLock()
 	for _,c := range e.containers {
+		r += c.Config.BlkioWeight
 		r += d.BlkioWeight
-		//r += c.Config.BlkioWeight
 		//r += dockerclient.ContainerConfig.Config.HostConfig.BlkioWeight
 		log.WithField("Config values for BlkioWeight in UsedBlkio function", d.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
 		//log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.HostConfig.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
