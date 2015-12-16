@@ -394,17 +394,12 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		container.Config.CpuShares = container.Config.CpuShares * e.Cpus / 1024.0
 		container.Config.HostConfig.CpuShares = container.Config.CpuShares
 
-		log.WithFields(log.Fields{"config value blkio": c.Config.BlkioWeight , "Hostconfig value blkio": c.Config.HostConfig.BlkioWeight}).Debugf("Debug values for blkio")
-		container.Config.BlkioWeight = c.Config.BlkioWeight
-		container.Config.HostConfig.BlkioWeight = c.Config.BlkioWeight
-
 		// Save the entire inspect back into the container.
 		container.Info = *info
 	}
 
 	// Update its internal state.
 	e.Lock()
-	log.WithFields(log.Fields{"config value blkio": c.Config.BlkioWeight , "Hostconfig value blkio": c.Config.HostConfig.BlkioWeight}).Debugf("Debug values for blkio")
 	container.Container = c
 	containers[container.Id] = container
 	e.Unlock()

@@ -31,13 +31,13 @@ func consolidateResourceFields(c *dockerclient.ContainerConfig) {
 
 	if c.BlkioWeight != c.HostConfig.BlkioWeight {
                 if c.BlkioWeight != 0 {
-			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used")
+			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used for case 1")
                         c.HostConfig.BlkioWeight = c.BlkioWeight
-			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used")
+			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used for case 2")
                 } else {
-			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used")
+			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used for case 3")
                         c.BlkioWeight = c.HostConfig.BlkioWeight
-			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used")
+			log.WithFields(log.Fields{"Config Blkio": c.HostConfig.BlkioWeight, "Used Blkio": c.BlkioWeight}).Debugf("Printing Environment values to console for blkio used for case 4")
                 }
         }
 
