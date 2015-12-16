@@ -387,6 +387,7 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		container.Config = BuildContainerConfig(*info.Config)
 		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
 
+		log.WithFields(log.Fields{"Info config hostconfig": info.Config.HostConfig.BlkioWeight, "Config blkio weight": info.Config.BlkioWeight}).Debugf("Print weights for blkioweight")
 		// FIXME remove "duplicate" lines and move this to cluster/config.go
 		container.Config.CpuShares = container.Config.CpuShares * e.Cpus / 1024.0
 		container.Config.HostConfig.CpuShares = container.Config.CpuShares
