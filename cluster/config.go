@@ -64,13 +64,13 @@ func consolidateResourceFields(c *dockerclient.ContainerConfig) {
 
 	if c.CpuShares != c.HostConfig.CpuShares {
 		if c.CpuShares != 0 {
-			log.WithFields(log.Fields{"ConfigCpuShares":c.HostConfig.CpuShares, "UsedCpuShares": c.CpuShares}).Debugf("Printing Environment values to console for Cpushares used in cluster")
+			log.WithFields(log.Fields{"ConfigCpuShares":c.HostConfig.CpuShares, "UsedCpuShares": c.CpuShares}).Debugf("Printing Environment values to console for Cpushares used in cluster for case 1")
 			c.HostConfig.CpuShares = c.CpuShares
-			log.WithFields(log.Fields{"ConfigCpuShares":c.HostConfig.CpuShares, "UsedCpuShares": c.CpuShares}).Debugf("Printing Environment values to console for Cpushares used in cluster")
+			log.WithFields(log.Fields{"ConfigCpuShares":c.HostConfig.CpuShares, "UsedCpuShares": c.CpuShares}).Debugf("Printing Environment values to console for Cpushares used in cluster for case 2")
 		} else {
-			log.WithFields(log.Fields{"ConfigCpuShares":c.HostConfig.CpuShares, "UsedCpuShares": c.CpuShares}).Debugf("Printing Environment values to console for Cpushares used in cluster")
+			log.WithFields(log.Fields{"ConfigCpuShares":c.HostConfig.CpuShares, "UsedCpuShares": c.CpuShares}).Debugf("Printing Environment values to console for Cpushares used in cluster for case 3")
 			c.CpuShares = c.HostConfig.CpuShares
-			log.WithFields(log.Fields{"ConfigCpuShares":c.HostConfig.CpuShares, "UsedCpuShares": c.CpuShares}).Debugf("Printing Environment values to console for Cpushares used in cluster")
+			log.WithFields(log.Fields{"ConfigCpuShares":c.HostConfig.CpuShares, "UsedCpuShares": c.CpuShares}).Debugf("Printing Environment values to console for Cpushares used in cluster for case 4")
 		}
 	}
 
