@@ -13,7 +13,6 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/docker/swarm/cluster"
 	"github.com/docker/docker/pkg/version"
 	"github.com/samalba/dockerclient"
 	"github.com/samalba/dockerclient/nopclient"
