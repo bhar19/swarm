@@ -390,6 +390,7 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		)
 		// Convert the ContainerConfig from inspect into our own
 		// cluster.ContainerConfig.
+		log.WithFields(log.Fields{"Print blkioweight before BuildContainerConfig": e.containers[c.BlkioWeight]}).Debugf("Print After engine 386")
 		log.WithFields(log.Fields{"name": "Print before BuildContainerConfig"}).Debugf("Print After engine 386")
 		container.Config = BuildContainerConfig(*info.Config)
 		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
@@ -504,19 +505,17 @@ func (e *Engine) UsedCpus() int64 {
 func (e *Engine) UsedBlkio() int64 {
 	var (
 		r int64
-		config dockerclient.ContainerConfig
+	//	config dockerclient.ContainerConfig
 	)
-	dockerConfig := cluster.BuildContainerConfig(config)
+	//dockerConfig := cluster.BuildContainerConfig(config)
 	//dockerConfig := config.ContainerConfig
 	e.RLock()
 	for _,c := range e.containers {
 		r += c.Config.BlkioWeight
-		r += dockerConfig.BlkioWeight
-		//r += dockerclient.ContainerConfig.Config.HostConfig.BlkioWeight
+	//	r += dockerConfig.BlkioWeight
 		//log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
-		log.WithField("Config values for BlkioWeight in UsedBlkio function", dockerConfig.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
+		log.WithField("Config values for BlkioWeight in UsedBlkio function", e.containers[BlkioWeight]).Debugf("Print Config values for HostConfig.Blkio")
 		//log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.HostConfig.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
-		//log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.BlkioWeight).Debugf("Print Config values for Config.Blkio")
 	}
 	e.RUnlock()
 	return r
