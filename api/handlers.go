@@ -818,7 +818,9 @@ func proxyContainerAndForceRefresh(c *context, w http.ResponseWriter, r *http.Re
 
 	cb := func(resp *http.Response) {
 		// force fresh container
+		log.WithFields(log.Fields{"name": "Print before container refresh"}).Debugf("Print in proxyrefresh 821")
 		container.Refresh()
+		log.WithFields(log.Fields{"name": "Print after container refresh"}).Debugf("Print in proxyrefresh 821")
 	}
 
 	if err := proxyAsync(c.tlsConfig, container.Engine.Addr, w, r, cb); err != nil {
