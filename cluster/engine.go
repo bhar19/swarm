@@ -359,16 +359,20 @@ func (e *Engine) refreshContainer(ID string, full bool) (*Container, error) {
 }
 
 func (e *Engine) updateContainer(c dockerclient.Container, containers map[string]*Container, full bool) (map[string]*Container, error) {
-	var container *Container
+	var container,containerIoTemp *Container
 
 	e.RLock()
 	if current, exists := e.containers[c.Id]; exists {
 		// The container is already known.
 		container = current
+		containerIoTemp = current
 	} else {
 		// This is a brand new container. We need to do a full refresh.
 		container = &Container{
 			Engine: e,
+		}
+		containerIoTemp = &Container{
+			Engine e,
 		}
 		full = true
 	}
@@ -388,14 +392,14 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		var (
 			d dockerclient.ContainerConfig
 		)
-		containerioConfig := BuildContainerConfig(d)
-		info.Config.BlkioWeight = containerioConfig.BlkioWeight
+		containerIoTemp.Config = BuildContainerConfig(d)
+		info.Config.BlkioWeight = containerIoTemp.Config.BlkioWeight
 		// Convert the ContainerConfig from inspect into our own
 		// cluster.ContainerConfig.
-		log.WithFields(log.Fields{"Print blkioweight before BuildContainerConfig": containerioConfig.BlkioWeight}).Debugf("Print After engine 386")
+		log.WithFields(log.Fields{"Print blkioweight before BuildContainerConfig": containerIoTemp.Config.BlkioWeight}).Debugf("Print After engine 386")
 		log.WithFields(log.Fields{"name": "Print before BuildContainerConfig"}).Debugf("Print After engine 386")
 		container.Config = BuildContainerConfig(*info.Config)
-		container.Config.BlkioWeight = containerioConfig.BlkioWeight
+		container.Config.BlkioWeight = containerIoTemp.Config.BlkioWeight
 		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
 
 		log.WithFields(log.Fields{"Config.BlkioWeight": d.BlkioWeight, "config.HostConfig.BlkioWeight": d.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
