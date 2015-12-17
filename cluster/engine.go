@@ -72,6 +72,7 @@ type Engine struct {
 	Name   string
 	Cpus   int64
 	Memory int64
+	Blkio  int64
 	Labels map[string]string
 
 	stopCh          chan struct{}
@@ -436,11 +437,16 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 			return nil, err
 		}
 
+		log.WithFields(log.Fields{"config value for blkio": e.Blkio}).Debugf("Print blkio in updatecontainer using engine variable")
+		info.Config.BlkioWeight =  e.Blkio
+
 		// Convert the ContainerConfig from inspect into our own
 		// cluster.ContainerConfig.
 		log.WithFields(log.Fields{"name": "Print before BuildContainerConfig in "}).Debugf("Print After engine 386")
 		container.Config = BuildContainerConfig(*info.Config)
 		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
+
+		log.WithFields(log.Fields{"Info config weight": info.Config.BlkioWeight, "Container blkio": container.Config.BlkioWeight, "container memory": container.Config.Memory, "Container cpu": container.Config.CpuShares}).Debugf("Printing values for BlkioWeight in updateContainerIo function")
 
 		// FIXME remove "duplicate" lines and move this to cluster/config.go
 		container.Config.CpuShares = container.Config.CpuShares * e.Cpus / 1024.0
@@ -486,6 +492,7 @@ func (e *Engine) updateContainerIo(c dockerclient.Container, containers map[stri
 			return nil, err
 		}
 
+		e.Blkio = blkio
 		info.Config.BlkioWeight = blkio
 		// Convert the ContainerConfig from inspect into our own
 		// cluster.ContainerConfig.
