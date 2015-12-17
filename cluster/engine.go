@@ -358,7 +358,83 @@ func (e *Engine) refreshContainer(ID string, full bool) (*Container, error) {
 	return e.containers[containers[0].Id], err
 }
 
+// Refresh the status of a container running on the engine. If `full` is true,
+// the container will be inspected.
+func (e *Engine) refreshContainerIo(ID string, full bool, blk string) (*Container, error) {
+        containers, err := e.client.ListContainers(true, false, fmt.Sprintf("{%q:[%q]}", "id", ID))
+        if err != nil {
+                return nil, err
+        }
+        if len(containers) > 1 {
+                // We expect one container, if we get more than one, trigger a full refresh.
+                err = e.RefreshContainers(full)
+                return nil, err
+        }
+        if len(containers) == 0 {
+                // The container doesn't exist on the engine, remove it.
+                e.Lock()
+                delete(e.containers, ID)
+                e.Unlock()
+
+                return nil, nil
+        }
+        log.WithFields(log.Fields{"Update Container call": "function call before updateContainer"}).Debugf("print information before updateContainer at 357")
+        _, err = e.updateContainerIo(containers[0], e.containers, full, blk)
+        log.WithFields(log.Fields{"Update Container call": "function call before updateContainer"}).Debugf("print information after updateContainer at 359")
+        return e.containers[containers[0].Id], err
+}
+
 func (e *Engine) updateContainer(c dockerclient.Container, containers map[string]*Container, full bool) (map[string]*Container, error) {
+	var container *Container
+
+	e.RLock()
+	if current, exists := e.containers[c.Id]; exists {
+		// The container is already known.
+		container = current
+	} else {
+		// This is a brand new container. We need to do a full refresh.
+		container = &Container{
+			Engine: e,
+		}
+		full = true
+	}
+	// Release the lock here as the next step is slow.
+	// Trade-off: If updateContainer() is called concurrently for the same
+	// container, we will end up doing a full refresh twice and the original
+	// container (containers[container.Id]) will get replaced.
+	e.RUnlock()
+
+	// Update ContainerInfo.
+	if full {
+		info, err := e.client.InspectContainer(c.Id)
+		if err != nil {
+			return nil, err
+		}
+
+		// Convert the ContainerConfig from inspect into our own
+		// cluster.ContainerConfig.
+		log.WithFields(log.Fields{"name": "Print before BuildContainerConfig in "}).Debugf("Print After engine 386")
+		container.Config = BuildContainerConfig(*info.Config)
+		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
+
+		// FIXME remove "duplicate" lines and move this to cluster/config.go
+		container.Config.CpuShares = container.Config.CpuShares * e.Cpus / 1024.0
+		container.Config.HostConfig.CpuShares = container.Config.CpuShares
+
+		// Save the entire inspect back into the container.
+		container.Info = *info
+	}
+
+	// Update its internal state.
+	e.Lock()
+	container.Container = c
+	containers[container.Id] = container
+	e.Unlock()
+
+	return containers, nil
+}
+
+func (e *Engine) updateContainerIo(c dockerclient.Container, containers map[string]*Container, full bool, blkio string) (map[string]*Container, error) {
 	var container,containerIoTemp *Container
 
 	e.RLock()
@@ -394,6 +470,7 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		)
 		containerIoTemp.Config = BuildContainerConfig(d)
 		info.Config.BlkioWeight = containerIoTemp.Config.BlkioWeight
+		info.Config.BlkioWeight = blkio
 		// Convert the ContainerConfig from inspect into our own
 		// cluster.ContainerConfig.
 		log.WithFields(log.Fields{"Print blkioweight before BuildContainerConfig": containerIoTemp.Config.BlkioWeight}).Debugf("Print After engine 386")
@@ -402,9 +479,10 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		container.Config.BlkioWeight = containerIoTemp.Config.BlkioWeight
 		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
 
-		log.WithFields(log.Fields{"Config.BlkioWeight": d.BlkioWeight, "config.HostConfig.BlkioWeight": d.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
-		log.WithFields(log.Fields{"Config.BlkioWeight": info.Config.BlkioWeight, "config.HostConfig.BlkioWeight": info.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
-		log.WithFields(log.Fields{"Config.BlkioWeight": container.Config.BlkioWeight, "config.HostConfig.BlkioWeight": container.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
+		log.WithFields(log.Fields{"Config.BlkioWeight": blkio, "Info config weight": info.Config.BlkioWeight, "Container config": container.Config.BlkioWeight}).Debugf("Printing values for BlkioWeight in updateContainerIo function")
+		//log.WithFields(log.Fields{"Config.BlkioWeight": d.BlkioWeight, "config.HostConfig.BlkioWeight": d.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
+		//log.WithFields(log.Fields{"Config.BlkioWeight": info.Config.BlkioWeight, "config.HostConfig.BlkioWeight": info.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
+		//log.WithFields(log.Fields{"Config.BlkioWeight": container.Config.BlkioWeight, "config.HostConfig.BlkioWeight": container.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
 
 		// FIXME remove "duplicate" lines and move this to cluster/config.go
 		container.Config.CpuShares = container.Config.CpuShares * e.Cpus / 1024.0
@@ -575,7 +653,8 @@ func (e *Engine) Create(config *ContainerConfig, name string, pullImage bool) (*
 
 	// Register the container immediately while waiting for a state refresh.
 	// Force a state refresh to pick up the newly created container.
-	e.refreshContainer(id, true)
+	//e.refreshContainer(id, true)
+	e.refreshContainerIo(id, true,dockerConfig.BlkioWeight)
 	e.RefreshVolumes()
 	e.RefreshNetworks()
 
