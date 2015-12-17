@@ -395,7 +395,7 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 		log.WithFields(log.Fields{"Print blkioweight before BuildContainerConfig": containerioConfig.BlkioWeight}).Debugf("Print After engine 386")
 		log.WithFields(log.Fields{"name": "Print before BuildContainerConfig"}).Debugf("Print After engine 386")
 		container.Config = BuildContainerConfig(*info.Config)
-		container.Config = containerioConfig.BlkioWeight
+		container.Config.BlkioWeight = containerioConfig.BlkioWeight
 		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
 
 		log.WithFields(log.Fields{"Config.BlkioWeight": d.BlkioWeight, "config.HostConfig.BlkioWeight": d.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
