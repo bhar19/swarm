@@ -13,6 +13,7 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"github.com/docker/swarm/cluster"
 	"github.com/docker/docker/pkg/version"
 	"github.com/samalba/dockerclient"
 	"github.com/samalba/dockerclient/nopclient"
@@ -354,7 +355,7 @@ func (e *Engine) refreshContainer(ID string, full bool) (*Container, error) {
 
 	log.WithFields(log.Fields{"Update Container call": "function call before updateContainer"}).Debugf("print information before updateContainer at 357")
 	_, err = e.updateContainer(containers[0], e.containers, full)
-	log.WithFields(log.Fields{"Update Container call": "function call before updateContainer"}).Debugf("print information before updateContainer at 359")
+	log.WithFields(log.Fields{"Update Container call": "function call before updateContainer"}).Debugf("print information after updateContainer at 359")
 	return e.containers[containers[0].Id], err
 }
 
@@ -502,13 +503,18 @@ func (e *Engine) UsedCpus() int64 {
 
 // UsedBlkio returns the sum of blkio weights reservers by containers.
 func (e *Engine) UsedBlkio() int64 {
-	var r int64
-	dockerConfig := config.ContainerConfig
+	var (
+		r int64
+		config dockerclient.ContainerConfig
+	)
+	dockerConfig := cluster.BuildContainerConfig(config)
+	//dockerConfig := config.ContainerConfig
 	e.RLock()
 	for _,c := range e.containers {
 		r += c.Config.BlkioWeight
 		r += dockerConfig.BlkioWeight
 		//r += dockerclient.ContainerConfig.Config.HostConfig.BlkioWeight
+		//log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
 		log.WithField("Config values for BlkioWeight in UsedBlkio function", dockerConfig.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
 		//log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.HostConfig.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
 		//log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.BlkioWeight).Debugf("Print Config values for Config.Blkio")
