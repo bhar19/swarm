@@ -360,7 +360,7 @@ func (e *Engine) refreshContainer(ID string, full bool) (*Container, error) {
 
 // Refresh the status of a container running on the engine. If `full` is true,
 // the container will be inspected.
-func (e *Engine) refreshContainerIo(ID string, full bool, blk string) (*Container, error) {
+func (e *Engine) refreshContainerIo(ID string, full bool, blk int64) (*Container, error) {
         containers, err := e.client.ListContainers(true, false, fmt.Sprintf("{%q:[%q]}", "id", ID))
         if err != nil {
                 return nil, err
@@ -434,7 +434,7 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 	return containers, nil
 }
 
-func (e *Engine) updateContainerIo(c dockerclient.Container, containers map[string]*Container, full bool, blkio string) (map[string]*Container, error) {
+func (e *Engine) updateContainerIo(c dockerclient.Container, containers map[string]*Container, full bool, blkio int64) (map[string]*Container, error) {
 	var container,containerIoTemp *Container
 
 	e.RLock()
@@ -654,7 +654,7 @@ func (e *Engine) Create(config *ContainerConfig, name string, pullImage bool) (*
 	// Register the container immediately while waiting for a state refresh.
 	// Force a state refresh to pick up the newly created container.
 	//e.refreshContainer(id, true)
-	e.refreshContainerIo(id, true,dockerConfig.BlkioWeight)
+	e.refreshContainerIo(id, true, dockerConfig.BlkioWeight)
 	e.RefreshVolumes()
 	e.RefreshNetworks()
 
