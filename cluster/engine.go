@@ -312,9 +312,7 @@ func (e *Engine) RefreshContainers(full bool) error {
 
 	merged := make(map[string]*Container)
 	for _, c := range containers {
-		log.WithFields(log.Fields{"Update Container call": "function call before updateContainer"}).Debugf("print information before updateContainer")
 		mergedUpdate, err := e.updateContainer(c, merged, full)
-		log.WithFields(log.Fields{"Update Container call": "function call after updateContainer"}).Debugf("print information after updateContainer")
 		if err != nil {
 			log.WithFields(log.Fields{"name": e.Name, "id": e.ID}).Errorf("Unable to update state of container %q: %v", c.Id, err)
 		} else {
@@ -354,7 +352,9 @@ func (e *Engine) refreshContainer(ID string, full bool) (*Container, error) {
 		return nil, nil
 	}
 
+	log.WithFields(log.Fields{"Update Container call": "function call before updateContainer"}).Debugf("print information before updateContainer at 357")
 	_, err = e.updateContainer(containers[0], e.containers, full)
+	log.WithFields(log.Fields{"Update Container call": "function call before updateContainer"}).Debugf("print information before updateContainer at 359")
 	return e.containers[containers[0].Id], err
 }
 
@@ -541,6 +541,7 @@ func (e *Engine) Create(config *ContainerConfig, name string, pullImage bool) (*
 	// understand.  Start by making a copy of the internal ContainerConfig as
 	// we don't want to mess with the original.
 	dockerConfig := config.ContainerConfig
+	log.WithField("Config values for dockerConfig Blkioweight", dockerConfig.BlkioWeight).Debugf("Print Config values for BlkioWeight in Create engine")
 
 	// nb of CPUs -> real CpuShares
 
