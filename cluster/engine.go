@@ -839,12 +839,16 @@ func (e *Engine) handler(ev *dockerclient.Event, _ chan error, args ...interface
 	case "die", "kill", "oom", "pause", "start", "stop", "unpause", "rename":
 		// If the container state changes, we have to do an inspect in
 		// order to update container.Info and get the new NetworkSettings.
+		log.WithFields(log.Fields{"name": "Print before handler for start"}).Debugf("Print in handler 842")
 		e.refreshContainer(ev.Id, true)
+		log.WithFields(log.Fields{"name": "Print after handler for start"}).Debugf("Print in handler 844")
 		e.RefreshVolumes()
 		e.RefreshNetworks()
 	default:
 		// Otherwise, do a "soft" refresh of the container.
+		log.WithFields(log.Fields{"name": "Print after handler for soft"}).Debugf("Print in handler 849")
 		e.refreshContainer(ev.Id, false)
+		log.WithFields(log.Fields{"name": "Print after handler for soft"}).Debugf("Print in handler 851")
 		e.RefreshVolumes()
 		e.RefreshNetworks()
 	}
@@ -910,7 +914,9 @@ func (e *Engine) RenameContainer(container *Container, newName string) error {
 	}
 
 	// refresh container
+	log.WithFields(log.Fields{"Rename Container": "Print before container refresh"}).Debugf("Print in Rename Container 913")
 	_, err = e.refreshContainer(container.Id, true)
+	log.WithFields(log.Fields{"Rename Container": "Print after container refresh"}).Debugf("Print in Rename Container 915")
 	return err
 }
 
