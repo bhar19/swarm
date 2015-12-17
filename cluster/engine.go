@@ -509,7 +509,7 @@ func (e *Engine) updateContainerIo(c dockerclient.Container, containers map[stri
 	// Update its internal state.
 	e.Lock()
 	container.Container = c
-	log.WithFields(log.Fields{"Config.BlkioWeight": blkio, "Info config weight": info.Config.BlkioWeight, "Container blkio": container.Config.BlkioWeight, "container memory": container.Config.Memory, "Container cpu": container.Config.CpuShares}).Debugf("Printing values for BlkioWeight in updateContainerIo function")
+	log.WithFields(log.Fields{"Config.BlkioWeight": blkio, "Container config blkio": container.Config.BlkioWeight, "container memory": container.Config.Memory, "Container cpu": container.Config.CpuShares}).Debugf("Printing values for BlkioWeight in updateContainerIo function")
 	containers[container.Id] = container
 	e.Unlock()
 
