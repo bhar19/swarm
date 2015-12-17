@@ -372,7 +372,7 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 			Engine: e,
 		}
 		containerIoTemp = &Container{
-			Engine e,
+			Engine: e,
 		}
 		full = true
 	}
