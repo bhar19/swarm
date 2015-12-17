@@ -60,7 +60,7 @@ func weighNodes(config *cluster.ContainerConfig, nodes []*node.Node) (weightedNo
 			cpuScore	int64 = 100
 			memoryScore	int64 = 100
 			blkioScore	int64 = 100
-			leadnodeblkio	int64 = 500
+			leafnodeblkio	int64 = 500
 		)
 
 		if config.CpuShares > 0 {
