@@ -329,6 +329,31 @@ func (e *Engine) RefreshContainers(full bool) error {
 	return nil
 }
 
+
+// RefreshContainers will refresh the list and status of containers running on the engine. If `full` is
+// true, each container will be inspected.
+// FIXME: unexport this method after mesos scheduler stops using it directly
+func (e *Engine) RefreshContainersIo(full bool, blk int64) error {
+        containers, err := e.client.ListContainers(true, false, "")
+        if err != nil {
+                return err
+        }
+        merged := make(map[string]*Container)
+        for _, c := range containers {
+                mergedUpdate, err := e.updateContainerIo(c, merged, full, blk)
+                if err != nil {
+                        log.WithFields(log.Fields{"name": e.Name, "id": e.ID}).Errorf("Unable to update state of container %q: %v", c.Id, err)
+                } else {
+                        merged = mergedUpdate
+                }
+        }
+        e.Lock()
+        defer e.Unlock()
+        e.containers = merged
+        log.WithFields(log.Fields{"id": e.ID, "name": e.Name}).Debugf("Updated engine state")
+        return nil
+}
+
 // Refresh the status of a container running on the engine. If `full` is true,
 // the container will be inspected.
 func (e *Engine) refreshContainer(ID string, full bool) (*Container, error) {
@@ -367,7 +392,7 @@ func (e *Engine) refreshContainerIo(ID string, full bool, blk int64) (*Container
         }
         if len(containers) > 1 {
                 // We expect one container, if we get more than one, trigger a full refresh.
-                err = e.RefreshContainers(full)
+                err = e.RefreshContainersIo(full,blk)
                 return nil, err
         }
         if len(containers) == 0 {
@@ -435,19 +460,15 @@ func (e *Engine) updateContainer(c dockerclient.Container, containers map[string
 }
 
 func (e *Engine) updateContainerIo(c dockerclient.Container, containers map[string]*Container, full bool, blkio int64) (map[string]*Container, error) {
-	var container,containerIoTemp *Container
+	var container *Container
 
 	e.RLock()
 	if current, exists := e.containers[c.Id]; exists {
 		// The container is already known.
 		container = current
-		containerIoTemp = current
 	} else {
 		// This is a brand new container. We need to do a full refresh.
 		container = &Container{
-			Engine: e,
-		}
-		containerIoTemp = &Container{
 			Engine: e,
 		}
 		full = true
@@ -465,21 +486,14 @@ func (e *Engine) updateContainerIo(c dockerclient.Container, containers map[stri
 			return nil, err
 		}
 
-		var (
-			d dockerclient.ContainerConfig
-		)
-		containerIoTemp.Config = BuildContainerConfig(d)
-		info.Config.BlkioWeight = containerIoTemp.Config.BlkioWeight
 		info.Config.BlkioWeight = blkio
 		// Convert the ContainerConfig from inspect into our own
 		// cluster.ContainerConfig.
-		log.WithFields(log.Fields{"Print blkioweight before BuildContainerConfig": containerIoTemp.Config.BlkioWeight}).Debugf("Print After engine 386")
 		log.WithFields(log.Fields{"name": "Print before BuildContainerConfig"}).Debugf("Print After engine 386")
 		container.Config = BuildContainerConfig(*info.Config)
-		container.Config.BlkioWeight = containerIoTemp.Config.BlkioWeight
 		log.WithFields(log.Fields{"name": "Print after BuildContainerConfig"}).Debugf("Print After engine 388")
 
-		log.WithFields(log.Fields{"Config.BlkioWeight": blkio, "Info config weight": info.Config.BlkioWeight, "Container config": container.Config.BlkioWeight}).Debugf("Printing values for BlkioWeight in updateContainerIo function")
+		log.WithFields(log.Fields{"Config.BlkioWeight": blkio, "Info config weight": info.Config.BlkioWeight, "Container blkio": container.Config.BlkioWeight, "container memory": container.Config.Memory, "Container cpu": container.Config.CpuShares}).Debugf("Printing values for BlkioWeight in updateContainerIo function")
 		//log.WithFields(log.Fields{"Config.BlkioWeight": d.BlkioWeight, "config.HostConfig.BlkioWeight": d.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
 		//log.WithFields(log.Fields{"Config.BlkioWeight": info.Config.BlkioWeight, "config.HostConfig.BlkioWeight": info.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
 		//log.WithFields(log.Fields{"Config.BlkioWeight": container.Config.BlkioWeight, "config.HostConfig.BlkioWeight": container.Config.HostConfig.BlkioWeight}).Debugf("Debug the results for BlkioWeight")
@@ -495,6 +509,7 @@ func (e *Engine) updateContainerIo(c dockerclient.Container, containers map[stri
 	// Update its internal state.
 	e.Lock()
 	container.Container = c
+	log.WithFields(log.Fields{"Config.BlkioWeight": blkio, "Info config weight": info.Config.BlkioWeight, "Container blkio": container.Config.BlkioWeight, "container memory": container.Config.Memory, "Container cpu": container.Config.CpuShares}).Debugf("Printing values for BlkioWeight in updateContainerIo function")
 	containers[container.Id] = container
 	e.Unlock()
 
