@@ -502,16 +502,14 @@ func (e *Engine) UsedCpus() int64 {
 
 // UsedBlkio returns the sum of blkio weights reservers by containers.
 func (e *Engine) UsedBlkio() int64 {
-	var (
-		r int64
-		d dockerclient.ContainerConfig
-	)
+	var r int64
+	dockerConfig := config.ContainerConfig
 	e.RLock()
 	for _,c := range e.containers {
 		r += c.Config.BlkioWeight
-		r += d.BlkioWeight
+		r += dockerConfig.BlkioWeight
 		//r += dockerclient.ContainerConfig.Config.HostConfig.BlkioWeight
-		log.WithField("Config values for BlkioWeight in UsedBlkio function", d.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
+		log.WithField("Config values for BlkioWeight in UsedBlkio function", dockerConfig.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
 		//log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.HostConfig.BlkioWeight).Debugf("Print Config values for HostConfig.Blkio")
 		//log.WithField("Config values for BlkioWeight in UsedBlkio function", c.Config.BlkioWeight).Debugf("Print Config values for Config.Blkio")
 	}
