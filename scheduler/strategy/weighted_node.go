@@ -65,6 +65,7 @@ func weighNodes(config *cluster.ContainerConfig, nodes []*node.Node) (weightedNo
 
 		if config.CpuShares > 0 {
 			cpuScore = (node.UsedCpus + config.CpuShares) * 100 / nodeCpus
+			log.WithFields(log.Fields{"CpuScore": cpuScore}).Debugf("Printing cpu score")
 		}
 		if config.Memory > 0 {
 			memoryScore = (node.UsedMemory + config.Memory) * 100 / nodeMemory
